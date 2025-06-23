@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <style>
+    body {
+      width: 300px;
+      padding: 15px;
+      font-family: Arial, sans-serif;
+    }
+    
+    .header {
+      text-align: center;
+      margin-bottom: 15px;
+    }
+    
+    .lead-count {
+      background: #e8f5e8;
+      padding: 10px;
+      border-radius: 5px;
+      text-align: center;
+      margin-bottom: 15px;
+    }
+    
+    .lead-item {
+      border: 1px solid #ddd;
+      padding: 8px;
+      margin-bottom: 8px;
+      border-radius: 3px;
+      font-size: 12px;
+    }
+    
+    .lead-url {
+      font-weight: bold;
+      color: #0066cc;
+      word-break: break-all;
+    }
+    
+    .clear-btn {
+      background: #ff4444;
+      color: white;
+      border: none;
+      padding: 8px 15px;
+      border-radius: 3px;
+      cursor: pointer;
+      width: 100%;
+    }
+    
+    .export-btn {
+      background: #4CAF50;
+      color: white;
+      border: none;
+      padding: 8px 15px;
+      border-radius: 3px;
+      cursor: pointer;
+      width: 100%;
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h3>Lead Builder</h3>
+  </div>
+  
+  <div id="leadCount" class="lead-count">
+    Loading leads...
+  </div>
+  
+  <button id="exportBtn" class="export-btn">Export to Console</button>
+  <button id="clearBtn" class="clear-btn">Clear All Leads</button>
+  
+  <div id="leadsList"></div>
+  
+  <script src="popup.js"></script>
+</body>
+</html>

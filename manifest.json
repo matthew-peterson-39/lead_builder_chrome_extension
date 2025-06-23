@@ -1,0 +1,35 @@
+{
+  "manifest_version": 3,
+  "name": "Lead Builder",
+  "version": "1.0",
+  "description": "Add leads to Google Sheets with a right-click",
+  
+  "permissions": [
+    "contextMenus",
+    "activeTab",
+    "storage",
+    "notifications"
+  ],
+  
+  "background": {
+    "service_worker": "background.js"
+  },
+  
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"]
+    }
+  ],
+  
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Lead Builder"
+  },
+  
+  "icons": {
+    "16": "lasso.png",
+    "48": "lasso.png",
+    "128": "lasso.png"
+  }
+}
