@@ -1,15 +1,19 @@
 {
   "manifest_version": 3,
   "name": "Lead Builder",
-  "version": "1.0",
-  "description": "Add leads to Google Sheets with a right-click",
+  "version": "2.0",
+  "description": "Extract and save lead information from websites",
   
   "permissions": [
-    "contextMenus",
-    "activeTab",
     "storage",
+    "contextMenus",
     "notifications",
-    "identity"
+    "activeTab"
+  ],
+  
+  "host_permissions": [
+    "https://script.google.com/*",
+    "https://script.googleusercontent.com/*"
   ],
   
   "background": {
@@ -19,26 +23,23 @@
   "content_scripts": [
     {
       "matches": ["<all_urls>"],
-      "js": ["content.js"]
+      "js": ["content.js"],
+      "run_at": "document_end"
     }
   ],
   
   "action": {
     "default_popup": "popup.html",
-    "default_title": "Lead Builder"
+    "default_icon": {
+      "16": "lasso.png",
+      "48": "lasso.png",
+      "128": "lasso.png"
+    }
   },
   
   "icons": {
     "16": "lasso.png",
     "48": "lasso.png",
     "128": "lasso.png"
-  },
-  
-  "oauth2": {
-    "client_id": "",
-    "scopes": [
-      "https://www.googleapis.com/auth/spreadsheets",
-      "https://www.googleapis.com/auth/drive.file"
-    ]
   }
 }
