@@ -19,7 +19,7 @@
   "content_scripts": [
     {
       "matches": ["<all_urls>"],
-      "js": ["config.js", "content.js"]
+      "js": ["content.js"]
     }
   ],
   
@@ -30,22 +30,15 @@
   
   "icons": {
     "16": "lasso.png",
-    "48": "lasso.png", 
+    "48": "lasso.png",
     "128": "lasso.png"
   },
   
   "oauth2": {
-    "client_id": "703385406742-f9qqm7qcqn0egmkh0j5sumbgsifonpuh.apps.googleusercontent.com", 
+    "client_id": "",
     "scopes": [
       "https://www.googleapis.com/auth/spreadsheets",
       "https://www.googleapis.com/auth/drive.file"
     ]
-  },
-  
-  "web_accessible_resources": [
-    {
-      "resources": ["config.js"],
-      "matches": ["<all_urls>"]
-    }
-  ]
+  }
 }

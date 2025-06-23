@@ -1,4 +1,3 @@
-// content.js
 console.log('Lead Builder content script loaded on:', window.location.href);
 
 // Listen for messages from background script
@@ -15,6 +14,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     });
   }
 });
+
 
 // Function to extract data from the current page
 function extractPageData(url) {

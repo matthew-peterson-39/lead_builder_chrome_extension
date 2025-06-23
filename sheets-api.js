@@ -1,11 +1,12 @@
-// sheets-api.js
+// sheets-api.js - Service worker compatible
 class SheetsAPI {
   constructor() {
     this.accessToken = null;
-    // Use config values
-    this.clientId = window.CONFIG?.GOOGLE_CLIENT_ID || '';
-    this.spreadsheetId = window.CONFIG?.SPREADSHEET_ID || '';
-    this.sheetName = window.CONFIG?.SHEET_NAME || 'Sheet1';
+    // Use self.CONFIG instead of window.CONFIG in service workers
+    const config = self.CONFIG || {};
+    this.clientId = config.GOOGLE_CLIENT_ID || '';
+    this.spreadsheetId = config.SPREADSHEET_ID || '';
+    this.sheetName = config.SHEET_NAME || 'Sheet1';
   }
 
   // Authenticate with Google
@@ -22,7 +23,7 @@ class SheetsAPI {
     });
   }
 
-  // Rest of your SheetsAPI methods...
+  // Add a lead to the Google Sheet
   async addLead(leadData) {
     try {
       if (!this.spreadsheetId) {
@@ -40,8 +41,8 @@ class SheetsAPI {
         leadData.phoneNumber,
         leadData.market,
         leadData.dateAdded,
-        'New',
-        ''
+        'New', // Default status
+        '' // Empty notes
       ]];
 
       const response = await fetch(
@@ -52,7 +53,9 @@ class SheetsAPI {
             'Authorization': `Bearer ${this.accessToken}`,
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({ values: values })
+          body: JSON.stringify({
+            values: values
+          })
         }
       );
 
@@ -60,13 +63,48 @@ class SheetsAPI {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
 
-      return await response.json();
+      const result = await response.json();
+      console.log('Lead added to Google Sheets:', result);
+      return result;
 
     } catch (error) {
       console.error('Error adding lead to Google Sheets:', error);
+      
+      // If token expired, try to refresh
+      if (error.message.includes('401')) {
+        this.accessToken = null;
+        return this.addLead(leadData); // Retry once
+      }
+      
+      throw error;
+    }
+  }
+
+  // Get all leads from the sheet
+  async getLeads() {
+    try {
+      if (!this.accessToken) {
+        await this.authenticate();
+      }
+
+      const response = await fetch(
+        `https://sheets.googleapis.com/v4/spreadsheets/${this.spreadsheetId}/values/${this.sheetName}`,
+        {
+          headers: {
+            'Authorization': `Bearer ${this.accessToken}`,
+          }
+        }
+      );
+
+      const result = await response.json();
+      return result.values || [];
+
+    } catch (error) {
+      console.error('Error getting leads from Google Sheets:', error);
       throw error;
     }
   }
 }
 
-window.SheetsAPI = SheetsAPI;
+// Make available in service worker context
+self.SheetsAPI = SheetsAPI;
