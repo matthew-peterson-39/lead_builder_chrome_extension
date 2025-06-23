@@ -5,11 +5,20 @@
   "description": "Add leads to Google Sheets with a right-click",
   
   "permissions": [
-    "contextMenus",
-    "activeTab",
-    "storage",
-    "notifications"
-  ],
+      "contextMenus",
+      "activeTab", 
+      "storage",
+      "notifications",
+      "identity",
+      "https://www.googleapis.com/*"
+    ],
+    "oauth2": {
+      "client_id": "YOUR_CLIENT_ID_HERE.apps.googleusercontent.com",
+      "scopes": [
+        "https://www.googleapis.com/auth/spreadsheets",
+        "https://www.googleapis.com/auth/drive.file"
+      ]
+    },
   
   "background": {
     "service_worker": "background.js"
