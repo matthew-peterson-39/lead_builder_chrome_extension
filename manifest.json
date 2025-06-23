@@ -5,20 +5,12 @@
   "description": "Add leads to Google Sheets with a right-click",
   
   "permissions": [
-      "contextMenus",
-      "activeTab", 
-      "storage",
-      "notifications",
-      "identity",
-      "https://www.googleapis.com/*"
-    ],
-    "oauth2": {
-      "client_id": "YOUR_CLIENT_ID_HERE.apps.googleusercontent.com",
-      "scopes": [
-        "https://www.googleapis.com/auth/spreadsheets",
-        "https://www.googleapis.com/auth/drive.file"
-      ]
-    },
+    "contextMenus",
+    "activeTab",
+    "storage",
+    "notifications",
+    "identity"
+  ],
   
   "background": {
     "service_worker": "background.js"
@@ -27,7 +19,7 @@
   "content_scripts": [
     {
       "matches": ["<all_urls>"],
-      "js": ["content.js"]
+      "js": ["config.js", "content.js"]
     }
   ],
   
@@ -38,7 +30,22 @@
   
   "icons": {
     "16": "lasso.png",
-    "48": "lasso.png",
+    "48": "lasso.png", 
     "128": "lasso.png"
-  }
+  },
+  
+  "oauth2": {
+    "client_id": "703385406742-f9qqm7qcqn0egmkh0j5sumbgsifonpuh.apps.googleusercontent.com", 
+    "scopes": [
+      "https://www.googleapis.com/auth/spreadsheets",
+      "https://www.googleapis.com/auth/drive.file"
+    ]
+  },
+  
+  "web_accessible_resources": [
+    {
+      "resources": ["config.js"],
+      "matches": ["<all_urls>"]
+    }
+  ]
 }
