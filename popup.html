@@ -1,77 +1,158 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="utf-8">
-  <style>
-    body {
-      width: 300px;
-      padding: 15px;
-      font-family: Arial, sans-serif;
-    }
-    
-    .header {
-      text-align: center;
-      margin-bottom: 15px;
-    }
-    
-    .lead-count {
-      background: #e8f5e8;
-      padding: 10px;
-      border-radius: 5px;
-      text-align: center;
-      margin-bottom: 15px;
-    }
-    
-    .lead-item {
-      border: 1px solid #ddd;
-      padding: 8px;
-      margin-bottom: 8px;
-      border-radius: 3px;
-      font-size: 12px;
-    }
-    
-    .lead-url {
-      font-weight: bold;
-      color: #0066cc;
-      word-break: break-all;
-    }
-    
-    .clear-btn {
-      background: #ff4444;
-      color: white;
-      border: none;
-      padding: 8px 15px;
-      border-radius: 3px;
-      cursor: pointer;
-      width: 100%;
-    }
-    
-    .export-btn {
-      background: #4CAF50;
-      color: white;
-      border: none;
-      padding: 8px 15px;
-      border-radius: 3px;
-      cursor: pointer;
-      width: 100%;
-      margin-bottom: 10px;
-    }
-  </style>
+    <meta charset="utf-8">
+    <style>
+        body {
+            width: 350px;
+            padding: 20px;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            margin: 0;
+        }
+        
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 20px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        h1 {
+            margin: 0 0 20px 0;
+            font-size: 24px;
+            text-align: center;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+        }
+        
+        input[type="url"] {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            background: rgba(255, 255, 255, 0.9);
+            color: #333;
+            box-sizing: border-box;
+        }
+        
+        input[type="url"]:focus {
+            outline: none;
+            background: white;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+        }
+        
+        button {
+            width: 100%;
+            padding: 12px;
+            background: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+        
+        button:hover {
+            background: #45a049;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+        }
+        
+        .status {
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 8px;
+            text-align: center;
+            display: none;
+        }
+        
+        .status.success {
+            background: rgba(76, 175, 80, 0.3);
+            border: 1px solid rgba(76, 175, 80, 0.5);
+        }
+        
+        .status.error {
+            background: rgba(244, 67, 54, 0.3);
+            border: 1px solid rgba(244, 67, 54, 0.5);
+        }
+        
+        .instructions {
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+        
+        .instructions h3 {
+            margin: 0 0 10px 0;
+            font-size: 16px;
+        }
+        
+        .instructions ol {
+            margin: 0;
+            padding-left: 20px;
+        }
+        
+        .instructions li {
+            margin-bottom: 8px;
+        }
+        
+        .icon {
+            width: 32px;
+            height: 32px;
+            margin: 0 auto 15px;
+            display: block;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 8px;
+        }
+    </style>
 </head>
 <body>
-  <div class="header">
-    <h3>Lead Builder</h3>
-  </div>
-  
-  <div id="leadCount" class="lead-count">
-    Loading leads...
-  </div>
-  
-  <button id="exportBtn" class="export-btn">Export to Console</button>
-  <button id="clearBtn" class="clear-btn">Clear All Leads</button>
-  
-  <div id="leadsList"></div>
-  
-  <script src="popup.js"></script>
+    <div class="container">
+        <img src="lasso.png" alt="Lead Builder" class="icon">
+        <h1>Lead Builder</h1>
+        
+        <div class="form-group">
+            <label for="gasUrl">Google Apps Script URL:</label>
+            <input type="url" id="gasUrl" placeholder="https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec">
+        </div>
+        
+        <button id="saveConfig">Save Configuration</button>
+        
+        <div id="status" class="status"></div>
+        
+        <div class="instructions">
+            <h3>How to use:</h3>
+            <ol>
+                <li>Deploy the Google Apps Script (code provided separately)</li>
+                <li>Copy the web app URL and paste it above</li>
+                <li>Save the configuration</li>
+                <li>Search on Google</li>
+                <li>Right-click any search result link</li>
+                <li>Select "Add Lead" from the context menu</li>
+            </ol>
+        </div>
+    </div>
+
+    <script src="popup.js"></script>
 </body>
 </html>

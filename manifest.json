@@ -13,7 +13,9 @@
   
   "host_permissions": [
     "https://script.google.com/*",
-    "https://script.googleusercontent.com/*"
+    "https://script.googleusercontent.com/*",
+    "https://*/*",
+    "http://*/*"
   ],
   
   "background": {

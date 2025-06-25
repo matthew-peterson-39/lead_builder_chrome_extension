@@ -1,62 +1,69 @@
-document.addEventListener('DOMContentLoaded', () => {
-  loadLeads();
-  
-  document.getElementById('clearBtn').addEventListener('click', clearLeads);
-  document.getElementById('exportBtn').addEventListener('click', exportLeads);
+// popup.js - Handles the extension popup functionality
+
+document.addEventListener('DOMContentLoaded', function() {
+    const gasUrlInput = document.getElementById('gasUrl');
+    const saveButton = document.getElementById('saveConfig');
+    const statusDiv = document.getElementById('status');
+
+    // Load saved configuration
+    loadConfig();
+
+    // Save configuration when button is clicked
+    saveButton.addEventListener('click', saveConfig);
+
+    // Load existing configuration
+    function loadConfig() {
+        chrome.storage.sync.get(['gasUrl'], function(result) {
+            if (result.gasUrl) {
+                gasUrlInput.value = result.gasUrl;
+            }
+        });
+    }
+
+    // Save configuration
+    function saveConfig() {
+        const gasUrl = gasUrlInput.value.trim();
+        
+        if (!gasUrl) {
+            showStatus('Please enter a Google Apps Script URL', 'error');
+            return;
+        }
+
+        // Validate URL format
+        try {
+            new URL(gasUrl);
+        } catch (e) {
+            showStatus('Please enter a valid URL', 'error');
+            return;
+        }
+
+        // Check if it's a Google Apps Script URL
+        if (!gasUrl.includes('script.google.com')) {
+            showStatus('Please enter a valid Google Apps Script URL', 'error');
+            return;
+        }
+
+        // Save to storage
+        chrome.storage.sync.set({
+            gasUrl: gasUrl
+        }, function() {
+            if (chrome.runtime.lastError) {
+                showStatus('Error saving configuration', 'error');
+            } else {
+                showStatus('Configuration saved successfully!', 'success');
+            }
+        });
+    }
+
+    // Show status message
+    function showStatus(message, type) {
+        statusDiv.textContent = message;
+        statusDiv.className = `status ${type}`;
+        statusDiv.style.display = 'block';
+        
+        // Hide after 3 seconds
+        setTimeout(() => {
+            statusDiv.style.display = 'none';
+        }, 3000);
+    }
 });
-
-function loadLeads() {
-  chrome.storage.local.get(['leads'], (result) => {
-    const leads = result.leads || [];
-    
-    document.getElementById('leadCount').textContent = `${leads.length} leads saved`;
-    
-    const leadsList = document.getElementById('leadsList');
-    leadsList.innerHTML = '';
-    
-    if (leads.length === 0) {
-      leadsList.innerHTML = '<p style="text-align: center; color: #666;">No leads yet. Right-click on a page or link to add one!</p>';
-      return;
-    }
-    
-    // Show last 5 leads
-    const recentLeads = leads.slice(-5).reverse();
-    
-    recentLeads.forEach(lead => {
-      const leadElement = document.createElement('div');
-      leadElement.className = 'lead-item';
-      
-      leadElement.innerHTML = `
-        <div class="lead-url">${lead.companyName || 'Unknown Company'}</div>
-        <div>${new URL(lead.websiteUrl).hostname}</div>
-        <div style="color: #666; margin-top: 5px;">
-          ${lead.contactEmail || 'No email'} | ${lead.market || 'Unknown market'}
-        </div>
-      `;
-      
-      leadsList.appendChild(leadElement);
-    });
-    
-    if (leads.length > 5) {
-      const moreElement = document.createElement('div');
-      moreElement.innerHTML = `<p style="text-align: center; color: #666;">... and ${leads.length - 5} more</p>`;
-      leadsList.appendChild(moreElement);
-    }
-  });
-}
-
-function clearLeads() {
-  if (confirm('Are you sure you want to clear all leads?')) {
-    chrome.storage.local.set({ leads: [] }, () => {
-      loadLeads();
-    });
-  }
-}
-
-function exportLeads() {
-  chrome.storage.local.get(['leads'], (result) => {
-    const leads = result.leads || [];
-    console.log('All Leads:', leads);
-    alert('Leads exported to console (F12 to view)');
-  });
-}
